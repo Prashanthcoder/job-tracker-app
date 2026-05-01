@@ -1,1 +1,22 @@
-.target
+# Maven build output - never push this
+target/
+
+# Eclipse IDE files - not needed by others
+.settings/
+.classpath
+.project
+.factorypath
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
