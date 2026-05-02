@@ -21,6 +21,8 @@ Thumbs.db
 # Logs
 *.log
 
-
+# Never commit secrets
+.env
+*.env
 
 
