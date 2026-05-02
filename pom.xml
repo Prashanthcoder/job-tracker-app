@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.jobtracker</groupId>
   <artifactId>JobTrackerApp</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-
   <name>JobTrackerApp Maven Webapp</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <!-- Add -parameters flag so @RequestParam works without explicit name -->
+    <maven.compiler.parameters>true</maven.compiler.parameters>
   </properties>
 
   <dependencies>
 
+    <!-- JUnit -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -26,6 +29,7 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- MySQL -->
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
@@ -33,18 +37,21 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- Hibernate ORM -->
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>6.4.4.Final</version>
     </dependency>
 
+    <!-- Jakarta Persistence API -->
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
       <version>3.1.0</version>
     </dependency>
 
+    <!-- Jakarta Servlet API (Tomcat provides this) -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
@@ -52,6 +59,7 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Spring MVC -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
@@ -59,7 +67,7 @@
       <scope>compile</scope>
     </dependency>
 
-    <!-- JSTL API jar — needed for taglib classes like ConditionalTagSupport -->
+    <!-- JSTL API -->
     <dependency>
       <groupId>jakarta.servlet.jsp.jstl</groupId>
       <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -67,7 +75,7 @@
       <scope>compile</scope>
     </dependency>
 
-    <!-- JSTL implementation jar — actual runtime classes bundled into WAR -->
+    <!-- JSTL Implementation -->
     <dependency>
       <groupId>org.glassfish.web</groupId>
       <artifactId>jakarta.servlet.jsp.jstl</artifactId>
@@ -83,7 +91,14 @@
       <plugins>
         <plugin><artifactId>maven-clean-plugin</artifactId><version>3.4.0</version></plugin>
         <plugin><artifactId>maven-resources-plugin</artifactId><version>3.3.1</version></plugin>
-        <plugin><artifactId>maven-compiler-plugin</artifactId><version>3.13.0</version></plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.13.0</version>
+          <configuration>
+            <!-- This fixes the @RequestParam name reflection issue -->
+            <parameters>true</parameters>
+          </configuration>
+        </plugin>
         <plugin><artifactId>maven-surefire-plugin</artifactId><version>3.3.0</version></plugin>
         <plugin><artifactId>maven-war-plugin</artifactId><version>3.4.0</version></plugin>
         <plugin><artifactId>maven-install-plugin</artifactId><version>3.1.2</version></plugin>
