@@ -448,7 +448,7 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
             </thead>
             <tbody>
               <c:forEach var="app" items="${applications}">
-                <tr data-status="${app.status}" data-search="${fn:toLowerCase(app.company_name)} ${fn:toLowerCase(app.role)}">
+                <tr data-status="${app.status}" data-search="${fn:toLowerCase(app.company_name)} ${fn:toLowerCase(app.role)}" data-company="${app.company_name}" data-role="${app.role}" data-date="${app.applyDate}" data-apptype="${app.application_type}">
                   <td>
                     <div class="company-cell">
                       <div class="company-avatar av-${fn:substring(app.company_name,0,1)}">
@@ -472,15 +472,11 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
                   <td><div class="desc-cell" title="${app.job_description}">${app.job_description}</div></td>
                   <td>
                     <div class="action-cell">
-                      <!-- EDIT button → opens modal pre-filled -->
+                      <!-- EDIT button → reads data from <tr> data-* attributes -->
                       <button class="btn-sm btn-edit"
-                        onclick="openEditModal(
-                          '${app.company_name}',
-                          '${app.role}',
-                          '${app.applyDate}',
-                          '${app.status}',
-                          '${app.application_type}',
-                          '${fn:replace(app.job_description, &quot;'&quot;, &quot;&#39;&quot;)}')">✏️ Edit</button>
+                        data-desc="${fn:replace(app.job_description, '"', '&quot;')}"
+                        data-status="${app.status}"
+                        onclick="openEditModalFromBtn(this)">✏️ Edit</button>
 
                       <!-- DELETE form -->
                       <form action="deleteJob" method="post" style="margin:0;display:inline;">
@@ -701,7 +697,17 @@ function updateCount(){
 }
 
 // ══ EDIT MODAL ══
-function openEditModal(company, role, date, status, appType, desc){
+function openEditModalFromBtn(btn){
+  // Read all data from the parent <tr> data-* attributes
+  const tr      = btn.closest('tr');
+  const company = tr.dataset.company;
+  const role    = tr.dataset.role;
+  const date    = tr.dataset.date;
+  const status  = btn.dataset.status;
+  const appType = tr.dataset.apptype;
+  // desc is stored on the button itself to avoid EL-in-JS issues
+  const desc    = btn.dataset.desc || '';
+
   document.getElementById('editOriginalCompany').value = company;
   document.getElementById('editCompany').value         = company;
   document.getElementById('editRole').value            = role;
@@ -755,37 +761,34 @@ if(rawEl){
   const missingChips = missing.split(',').filter(k=>k.trim())
     .map(k=>`<span class="keyword-chip kw-miss">${k.trim()}</span>`).join('');
 
-  body.innerHTML = `
-    <div class="ats-score-row">
-      <div class="ats-score-circle" style="border-color:${scoreColor}">
-        <span class="ats-score-num" style="color:${scoreColor}">${score}</span>
-        <span class="ats-score-label">/ 100</span>
-      </div>
-      <div class="ats-details">
-        <div class="ats-row">
-          <div class="ats-row-label">✅ Matched Keywords</div>
-          <div class="ats-row-value">${matchedChips || '<span style="color:var(--muted)">None found</span>'}</div>
-        </div>
-        <div class="ats-row">
-          <div class="ats-row-label">❌ Missing Keywords</div>
-          <div class="ats-row-value">${missingChips || '<span style="color:var(--muted)">None</span>'}</div>
-        </div>
-      </div>
-    </div>
-    ${tip ? `<div class="ats-tip">💡 <strong>Tip:</strong> ${tip}</div>` : ''}
-  `;
+  var tipHtml = tip ? '<div class="ats-tip">&#128161; <strong>Tip:</strong> ' + tip + '</div>' : '';
+  body.innerHTML =
+    '<div class="ats-score-row">'
+    + '<div class="ats-score-circle" style="border-color:' + scoreColor + '">'
+    + '<span class="ats-score-num" style="color:' + scoreColor + '">' + score + '</span>'
+    + '<span class="ats-score-label">/ 100</span>'
+    + '</div>'
+    + '<div class="ats-details">'
+    + '<div class="ats-row"><div class="ats-row-label">✅ Matched Keywords</div>'
+    + '<div class="ats-row-value">' + (matchedChips || '<span style="color:var(--muted)">None found</span>') + '</div></div>'
+    + '<div class="ats-row"><div class="ats-row-label">❌ Missing Keywords</div>'
+    + '<div class="ats-row-value">' + (missingChips || '<span style="color:var(--muted)">None</span>') + '</div></div>'
+    + '</div>'
+    + '</div>'
+    + tipHtml;
 }
 
 // ══ Auto-open edit modal if editApp is set (from GET /editJob) ══
 <c:if test="${not empty editApp}">
-  openEditModal(
-    '${editApp.company_name}',
-    '${editApp.role}',
-    '${editApp.applyDate}',
-    '${editApp.status}',
-    '${editApp.application_type}',
-    '${fn:replace(editApp.job_description, "'", "&#39;")}'
-  );
+  // Auto open modal from server-side editApp attribute
+  document.getElementById('editOriginalCompany').value = '${editApp.company_name}';
+  document.getElementById('editCompany').value         = '${editApp.company_name}';
+  document.getElementById('editRole').value            = '${editApp.role}';
+  document.getElementById('editDate').value            = '${editApp.applyDate}';
+  document.getElementById('editStatus').value          = '${editApp.status}';
+  document.getElementById('editAppType').value         = '${editApp.application_type}';
+  document.getElementById('editDesc').value            = `${editApp.job_description}`;
+  document.getElementById('editModal').classList.add('open');
 </c:if>
 </script>
 </body>
