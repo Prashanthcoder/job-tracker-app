@@ -338,7 +338,7 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
         <div class="ai-panel-title"><span>🤖</span> AI Career Insights</div>
         <div>
           <span class="ai-company-label">${aiCompany}</span>
-          <span class="ai-badge">Claude AI</span>
+          <span class="ai-badge">JobTracker AI</span>
         </div>
       </div>
       <div class="ai-body">${aiInsight}</div>
@@ -356,7 +356,6 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
       <span class="form-card-title">Add Job Application</span>
       <span class="form-card-badge">New Entry</span>
     </div>
-    <!-- enctype="multipart/form-data" is REQUIRED for file upload -->
     <form action="addJob" method="post" enctype="multipart/form-data" class="form-body">
       <div class="form-group">
         <label>Company Name</label>
@@ -448,10 +447,14 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
             </thead>
             <tbody>
               <c:forEach var="app" items="${applications}">
-
-                <tr data-status="${app.status}" data-search="${fn:toLowerCase(app.company_name)} ${fn:toLowerCase(app.role)}" data-company="${app.company_name}" data-role="${app.role}" data-date="${app.applyDate}" data-apptype="${app.application_type}">
-
-                <tr data-status="${app.status}" data-search="${fn:toLowerCase(app.company_name)} ${fn:toLowerCase(app.role)}">
+                <%-- Single <tr> with all data-* attributes needed by JS --%>
+                <tr data-status="${app.status}"
+                    data-search="${fn:toLowerCase(app.company_name)} ${fn:toLowerCase(app.role)}"
+                    data-id="${app.id}"
+                    data-company="${app.company_name}"
+                    data-role="${app.role}"
+                    data-date="${app.applyDate}"
+                    data-apptype="${app.application_type}">
                   <td>
                     <div class="company-cell">
                       <div class="company-avatar av-${fn:substring(app.company_name,0,1)}">
@@ -476,39 +479,30 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
                   <td>
                     <div class="action-cell">
 
-                      <!-- EDIT button → reads data from <tr> data-* attributes -->
+                      <%-- EDIT button — reads id + data from parent <tr> --%>
                       <button class="btn-sm btn-edit"
                         data-desc="${fn:replace(app.job_description, '"', '&quot;')}"
                         data-status="${app.status}"
                         onclick="openEditModalFromBtn(this)">✏️ Edit</button>
 
-                      <!-- EDIT button → opens modal pre-filled -->
-                      <button class="btn-sm btn-edit"
-                        onclick="openEditModal(
-                          '${app.company_name}',
-                          '${app.role}',
-                          '${app.applyDate}',
-                          '${app.status}',
-                          '${app.application_type}',
-                          '${fn:replace(app.job_description, &quot;'&quot;, &quot;&#39;&quot;)}')">✏️ Edit</button>
-
-
-                      <!-- DELETE form -->
-                      <form action="deleteJob" method="post" style="margin:0;display:inline;">
-                        <input type="hidden" name="company_name" value="${app.company_name}"/>
-                        <button type="submit" class="btn-sm btn-delete"
-                          onclick="return confirm('Delete ${app.company_name}?')">🗑 Del</button>
+                      <%-- DELETE form — uses Long id as PK --%>
+                      <form action="deleteJob" method="post" style="margin:0;display:inline;"
+                            onsubmit="return confirm('Delete this application?');">
+                        <input type="hidden" name="id" value="${app.id}"/>
+                        <button type="submit" class="btn-sm btn-delete">🗑 Delete</button>
                       </form>
 
-                      <!-- AI INSIGHTS form -->
+                      <%-- AI INSIGHTS form --%>
                       <form action="aiInsights" method="post" style="margin:0;display:inline;">
+                        <input type="hidden" name="id"           value="${app.id}"/>
                         <input type="hidden" name="company_name" value="${app.company_name}"/>
-                        <input type="hidden" name="role" value="${app.role}"/>
-                        <input type="hidden" name="status" value="${app.status}"/>
-                        <input type="hidden" name="job_desc" value="${app.job_description}"/>
+                        <input type="hidden" name="role"         value="${app.role}"/>
+                        <input type="hidden" name="status"       value="${app.status}"/>
+                        <input type="hidden" name="job_desc"     value="${app.job_description}"/>
                         <button type="submit" class="btn-sm btn-ai"
                           onclick="showLoading(this,'🤖...')">🤖 AI</button>
                       </form>
+
                     </div>
                   </td>
                 </tr>
@@ -535,7 +529,6 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
         <span class="ai-badge">AI Powered</span>
       </div>
       <div class="ats-body" id="atsResultBody">
-        <!-- Parsed by JS below -->
         <div id="atsRawResult" style="display:none;">${atsResult}</div>
       </div>
     </div>
@@ -604,9 +597,9 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
       <span class="modal-title">✏️ Edit Application</span>
       <button class="modal-close" onclick="closeEditModal()">×</button>
     </div>
+    <%-- Uses Long id as PK — no more original_company workaround --%>
     <form action="updateJob" method="post" enctype="multipart/form-data" class="modal-body">
-      <!-- Original company name to track PK change -->
-      <input type="hidden" name="original_company" id="editOriginalCompany"/>
+      <input type="hidden" name="id" id="editId"/>
 
       <div class="form-group">
         <label>Company Name</label>
@@ -654,17 +647,20 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
 </div>
 
 <!-- ══ FOOTER ══ -->
-<footer>JobTrack Pro &nbsp;·&nbsp; Spring MVC + Hibernate + Claude AI &nbsp;·&nbsp; Built for job seekers</footer>
+<footer>JobTrack Pro &nbsp;·&nbsp; Spring MVC + Hibernate + Groq AI &nbsp;·&nbsp; Built for job seekers</footer>
 
 <script>
 // ══ STATS COUNT ══
-const rows = document.querySelectorAll('#jobTable tbody tr');
-document.getElementById('totalCount').textContent     = rows.length;
-document.getElementById('interviewCount').textContent = [...rows].filter(r=>r.dataset.status==='Interview').length;
-document.getElementById('offerCount').textContent     = [...rows].filter(r=>r.dataset.status==='Offer').length;
-document.getElementById('rejectedCount').textContent  = [...rows].filter(r=>r.dataset.status==='Rejected').length;
-const tc = document.getElementById('tableCount');
-if(tc) tc.textContent = rows.length + ' record' + (rows.length!==1?'s':'');
+(function(){
+  const rows = document.querySelectorAll('#jobTable tbody tr');
+  const total = rows.length;
+  document.getElementById('totalCount').textContent     = total;
+  document.getElementById('interviewCount').textContent = [...rows].filter(r=>r.dataset.status==='Interview').length;
+  document.getElementById('offerCount').textContent     = [...rows].filter(r=>r.dataset.status==='Offer').length;
+  document.getElementById('rejectedCount').textContent  = [...rows].filter(r=>r.dataset.status==='Rejected').length;
+  const tc = document.getElementById('tableCount');
+  if(tc) tc.textContent = total + ' record' + (total !== 1 ? 's' : '');
+})();
 
 // ══ DEFAULT DATE ══
 const di = document.getElementById('addDate');
@@ -672,164 +668,138 @@ if(di) di.valueAsDate = new Date();
 
 // ══ TABS ══
 function switchTab(tabId, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+tabId).classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
   btn.classList.add('active');
 }
 
 // Auto-switch to ATS tab if result is present
 <c:if test="${not empty atsResult}">
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-ats').classList.add('active');
   document.querySelectorAll('.tab-btn')[1].classList.add('active');
 </c:if>
 
 // ══ SEARCH ══
-function filterTable(q){
+function filterTable(q) {
   const query = q.toLowerCase();
-  document.querySelectorAll('#jobTable tbody tr').forEach(r=>{
+  document.querySelectorAll('#jobTable tbody tr').forEach(r => {
     r.style.display = r.dataset.search.includes(query) ? '' : 'none';
   });
   updateCount();
 }
 
 // ══ STATUS FILTER ══
-function filterStatus(status, btn){
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+function filterStatus(status, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('#jobTable tbody tr').forEach(r=>{
-    r.style.display = (status==='all' || r.dataset.status===status) ? '' : 'none';
+  document.querySelectorAll('#jobTable tbody tr').forEach(r => {
+    r.style.display = (status === 'all' || r.dataset.status === status) ? '' : 'none';
   });
   updateCount();
 }
 
-function updateCount(){
-  const visible = [...document.querySelectorAll('#jobTable tbody tr')].filter(r=>r.style.display!=='none').length;
+function updateCount() {
+  const visible = [...document.querySelectorAll('#jobTable tbody tr')].filter(r => r.style.display !== 'none').length;
   const tc = document.getElementById('tableCount');
-  if(tc) tc.textContent = visible + ' record' + (visible!==1?'s':'');
+  if(tc) tc.textContent = visible + ' record' + (visible !== 1 ? 's' : '');
 }
 
 // ══ EDIT MODAL ══
-
-function openEditModalFromBtn(btn){
-  // Read all data from the parent <tr> data-* attributes
+// Reads all data from the parent <tr> data-* attributes + button's data-desc
+function openEditModalFromBtn(btn) {
   const tr      = btn.closest('tr');
+  const id      = tr.dataset.id;
   const company = tr.dataset.company;
   const role    = tr.dataset.role;
   const date    = tr.dataset.date;
   const status  = btn.dataset.status;
   const appType = tr.dataset.apptype;
-  // desc is stored on the button itself to avoid EL-in-JS issues
   const desc    = btn.dataset.desc || '';
+  openEditModal(id, company, role, date, status, appType, desc);
+}
 
-
-function openEditModal(company, role, date, status, appType, desc){
-  document.getElementById('editOriginalCompany').value = company;
-  document.getElementById('editCompany').value         = company;
-  document.getElementById('editRole').value            = role;
-  document.getElementById('editDate').value            = date;
-  document.getElementById('editStatus').value          = status;
-  document.getElementById('editAppType').value         = appType;
-  document.getElementById('editDesc').value            = desc;
+function openEditModal(id, company, role, date, status, appType, desc) {
+  document.getElementById('editId').value      = id;
+  document.getElementById('editCompany').value = company;
+  document.getElementById('editRole').value    = role;
+  document.getElementById('editDate').value    = date;
+  document.getElementById('editStatus').value  = status;
+  document.getElementById('editAppType').value = appType;
+  document.getElementById('editDesc').value    = desc;
   document.getElementById('editModal').classList.add('open');
 }
 
-function closeEditModal(){
+function closeEditModal() {
   document.getElementById('editModal').classList.remove('open');
 }
 
 // Close modal on backdrop click
-document.getElementById('editModal').addEventListener('click', function(e){
+document.getElementById('editModal').addEventListener('click', function(e) {
   if(e.target === this) closeEditModal();
 });
 
-// Close on Escape
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeEditModal(); });
+// Close on Escape key
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeEditModal(); });
 
-// ══ LOADING STATE for AI/ATS buttons ══
-function showLoading(btn, text){
+// ══ LOADING STATE for AI / ATS buttons ══
+function showLoading(btn, text) {
   btn.disabled = true;
-  btn.innerHTML = text + ' <div class="spinner" style="display:inline-block"></div>';
+  btn.innerHTML = text + ' <div class="spinner" style="display:inline-block;"></div>';
   btn.closest('form').submit();
 }
 
 // ══ ATS RESULT PARSER ══
-// Parses the raw text from Claude and renders it nicely
+// Parses the structured text from Groq and renders it with score circle + keyword chips
 const rawEl = document.getElementById('atsRawResult');
-if(rawEl){
-  const raw = rawEl.textContent.trim();
+if(rawEl) {
+  const raw  = rawEl.textContent.trim();
   const body = document.getElementById('atsResultBody');
 
-  const scoreMatch    = raw.match(/SCORE:\s*(\d+)/i);
-  const matchedMatch  = raw.match(/MATCHED_KEYWORDS:\s*([^\n]+)/i);
-  const missingMatch  = raw.match(/MISSING_KEYWORDS:\s*([^\n]+)/i);
-  const tipMatch      = raw.match(/IMPROVEMENT_TIP:\s*([^\n]+)/i);
+  const scoreMatch   = raw.match(/SCORE:\s*(\d+)/i);
+  const matchedMatch = raw.match(/MATCHED_KEYWORDS:\s*([^\n]+)/i);
+  const missingMatch = raw.match(/MISSING_KEYWORDS:\s*([^\n]+)/i);
+  const tipMatch     = raw.match(/IMPROVEMENT_TIP:\s*([^\n]+)/i);
 
-  const score   = scoreMatch   ? parseInt(scoreMatch[1])        : '?';
-  const matched = matchedMatch ? matchedMatch[1].trim()         : '';
-  const missing = missingMatch ? missingMatch[1].trim()         : '';
-  const tip     = tipMatch     ? tipMatch[1].trim()             : '';
+  const score   = scoreMatch   ? parseInt(scoreMatch[1])  : '?';
+  const matched = matchedMatch ? matchedMatch[1].trim()   : '';
+  const missing = missingMatch ? missingMatch[1].trim()   : '';
+  const tip     = tipMatch     ? tipMatch[1].trim()       : '';
 
-  const scoreColor = score>=70 ? 'var(--success)' : score>=40 ? 'var(--warning)' : 'var(--danger)';
+  const scoreColor = score >= 70 ? 'var(--success)' : score >= 40 ? 'var(--warning)' : 'var(--danger)';
 
-  const matchedChips = matched.split(',').filter(k=>k.trim())
-    .map(k=>`<span class="keyword-chip kw-match">${k.trim()}</span>`).join('');
-  const missingChips = missing.split(',').filter(k=>k.trim())
-    .map(k=>`<span class="keyword-chip kw-miss">${k.trim()}</span>`).join('');
-
-  var tipHtml = tip ? '<div class="ats-tip">&#128161; <strong>Tip:</strong> ' + tip + '</div>' : '';
-  body.innerHTML =
-    '<div class="ats-score-row">'
-    + '<div class="ats-score-circle" style="border-color:' + scoreColor + '">'
-    + '<span class="ats-score-num" style="color:' + scoreColor + '">' + score + '</span>'
-    + '<span class="ats-score-label">/ 100</span>'
-    + '</div>'
-    + '<div class="ats-details">'
-    + '<div class="ats-row"><div class="ats-row-label">✅ Matched Keywords</div>'
-    + '<div class="ats-row-value">' + (matchedChips || '<span style="color:var(--muted)">None found</span>') + '</div></div>'
-    + '<div class="ats-row"><div class="ats-row-label">❌ Missing Keywords</div>'
-    + '<div class="ats-row-value">' + (missingChips || '<span style="color:var(--muted)">None</span>') + '</div></div>'
-    + '</div>'
-    + '</div>'
-    + tipHtml;
+  const matchedChips = matched.split(',').filter(k => k.trim())
+    .map(k => `<span class="keyword-chip kw-match">${k.trim()}</span>`).join('');
+  const missingChips = missing.split(',').filter(k => k.trim())
+    .map(k => `<span class="keyword-chip kw-miss">${k.trim()}</span>`).join('');
 
   body.innerHTML = `
-    <div class="ats-score-row">
-      <div class="ats-score-circle" style="border-color:${scoreColor}">
-        <span class="ats-score-num" style="color:${scoreColor}">${score}</span>
-        <span class="ats-score-label">/ 100</span>
-      </div>
-      <div class="ats-details">
-        <div class="ats-row">
-          <div class="ats-row-label">✅ Matched Keywords</div>
-          <div class="ats-row-value">${matchedChips || '<span style="color:var(--muted)">None found</span>'}</div>
-        </div>
-        <div class="ats-row">
-          <div class="ats-row-label">❌ Missing Keywords</div>
-          <div class="ats-row-value">${missingChips || '<span style="color:var(--muted)">None</span>'}</div>
-        </div>
-      </div>
-    </div>
-    ${tip ? `<div class="ats-tip">💡 <strong>Tip:</strong> ${tip}</div>` : ''}
-  `;
-
+	    <div class="ats-score-row">
+	      <div class="ats-score-circle" style="border-color:${scoreColor}">
+	        <span class="ats-score-num" style="color:${scoreColor}">${score}</span>
+	        <span class="ats-score-label">/ 100</span>
+	      </div>
+	      <div class="ats-details">
+	        <div class="ats-row">
+	          <div class="ats-row-label">✅ Matched Keywords</div>
+	          <div class="ats-row-value">${matchedChips || '<span style="color:var(--muted)">None found</span>'}</div>
+	        </div>
+	        <div class="ats-row">
+	          <div class="ats-row-label">❌ Missing Keywords</div>
+	          <div class="ats-row-value">${missingChips || '<span style="color:var(--muted)">None</span>'}</div>
+	        </div>
+	      </div>
+	    </div>
+	    ${tip ? `<div class="ats-tip">💡 <strong>Tip:</strong> ${tip}</div>` : ''}
+	  `;
 }
 
 // ══ Auto-open edit modal if editApp is set (from GET /editJob) ══
 <c:if test="${not empty editApp}">
-
-  // Auto open modal from server-side editApp attribute
-  document.getElementById('editOriginalCompany').value = '${editApp.company_name}';
-  document.getElementById('editCompany').value         = '${editApp.company_name}';
-  document.getElementById('editRole').value            = '${editApp.role}';
-  document.getElementById('editDate').value            = '${editApp.applyDate}';
-  document.getElementById('editStatus').value          = '${editApp.status}';
-  document.getElementById('editAppType').value         = '${editApp.application_type}';
-  document.getElementById('editDesc').value            = `${editApp.job_description}`;
-  document.getElementById('editModal').classList.add('open');
   openEditModal(
+    '${editApp.id}',
     '${editApp.company_name}',
     '${editApp.role}',
     '${editApp.applyDate}',

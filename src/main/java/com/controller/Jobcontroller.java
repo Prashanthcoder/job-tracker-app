@@ -69,15 +69,16 @@ public class Jobcontroller {
 
     // POST "/deleteJob" → Delete application
     @PostMapping("/deleteJob")
-    public String deleteJob(@RequestParam("company_name") String company_name) {
-        dao.deleteJob(company_name);
+    public String deleteJob(@RequestParam("id") Long id) {
+        dao.deleteJob(id);
         return "redirect:/";
     }
+    
 
     // GET "/editJob" → Pre-fill edit modal
     @GetMapping("/editJob")
-    public String editJobForm(@RequestParam("company_name") String company_name, Model model) {
-        model.addAttribute("editApp", dao.findById(company_name));
+    public String editJobForm(@RequestParam("id") Long id, Model model) {
+        model.addAttribute("editApp", dao.findById(id));
         model.addAttribute("applications", dao.getAllJobs());
         model.addAttribute("job", new JobApplication());
         return "home.jsp";
@@ -86,7 +87,7 @@ public class Jobcontroller {
     // POST "/updateJob" → Save edits
     @PostMapping("/updateJob")
     public String updateJob(
-            @RequestParam("original_company") String originalCompany,
+            @RequestParam("id")               Long id,
             @RequestParam("company_name")     String company_name,
             @RequestParam("role")             String role,
             @RequestParam("applyDate")        String applyDate,
@@ -95,28 +96,26 @@ public class Jobcontroller {
             @RequestParam("job_description")  String job_description,
             @RequestParam(value = "resumeFile", required = false) MultipartFile resumeFile) {
 
-        JobApplication updated = new JobApplication();
-        updated.setCompany_name(company_name);
-        updated.setRole(role);
-        updated.setApplyDate(applyDate);
-        updated.setStatus(status);
-        updated.setApplication_type(application_type);
-        updated.setJob_description(job_description);
-
-        JobApplication existing = dao.findById(originalCompany);
-        if (existing != null) updated.setResume_path(existing.getResume_path());
+        JobApplication existing = dao.findById(id);
+        existing.setCompany_name(company_name);
+        existing.setRole(role);
+        existing.setApplyDate(applyDate);
+        existing.setStatus(status);
+        existing.setApplication_type(application_type);
+        existing.setJob_description(job_description);
 
         if (resumeFile != null && !resumeFile.isEmpty()) {
-            updated.setResume_path(saveResume(resumeFile, company_name));
+            existing.setResume_path(saveResume(resumeFile, company_name));
         }
 
-        dao.updateJob(updated, originalCompany);
+        dao.updateJob(existing);
         return "redirect:/";
     }
 
     // POST "/aiInsights" → Groq career advice
     @PostMapping("/aiInsights")
     public String aiInsights(
+            @RequestParam("id")           Long id,
             @RequestParam("company_name") String company_name,
             @RequestParam("role")         String role,
             @RequestParam("status")       String status,
@@ -143,6 +142,7 @@ public class Jobcontroller {
     // POST "/atsScore" → Groq ATS analysis
     @PostMapping("/atsScore")
     public String atsScore(
+            @RequestParam("id")           Long id,
             @RequestParam("company_name") String company_name,
             @RequestParam("job_desc")     String jobDesc,
             @RequestParam("resume_text")  String resumeText,

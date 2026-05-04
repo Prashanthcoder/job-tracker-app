@@ -1,13 +1,15 @@
 package dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class JobApplication {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String company_name;
 
     @Column
@@ -25,11 +27,13 @@ public class JobApplication {
     @Column
     private String application_type;
 
-    // Stores the uploaded resume file path on server
     @Column
     private String resume_path;
 
     // ── Getters & Setters ──
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getCompany_name() { return company_name; }
     public void setCompany_name(String company_name) { this.company_name = company_name; }
