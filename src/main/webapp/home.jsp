@@ -775,25 +775,24 @@ if(rawEl) {
   const missingChips = missing.split(',').filter(k => k.trim())
     .map(k => `<span class="keyword-chip kw-miss">${k.trim()}</span>`).join('');
 
-  body.innerHTML = `
-	    <div class="ats-score-row">
-	      <div class="ats-score-circle" style="border-color:${scoreColor}">
-	        <span class="ats-score-num" style="color:${scoreColor}">${score}</span>
-	        <span class="ats-score-label">/ 100</span>
-	      </div>
-	      <div class="ats-details">
-	        <div class="ats-row">
-	          <div class="ats-row-label">✅ Matched Keywords</div>
-	          <div class="ats-row-value">${matchedChips || '<span style="color:var(--muted)">None found</span>'}</div>
-	        </div>
-	        <div class="ats-row">
-	          <div class="ats-row-label">❌ Missing Keywords</div>
-	          <div class="ats-row-value">${missingChips || '<span style="color:var(--muted)">None</span>'}</div>
-	        </div>
-	      </div>
-	    </div>
-	    ${tip ? `<div class="ats-tip">💡 <strong>Tip:</strong> ${tip}</div>` : ''}
-	  `;
+  body.innerHTML =
+	  '<div class="ats-score-row">' +
+	    '<div class="ats-score-circle" style="border-color:' + scoreColor + '">' +
+	      '<span class="ats-score-num" style="color:' + scoreColor + '">' + score + '</span>' +
+	      '<span class="ats-score-label">/ 100</span>' +
+	    '</div>' +
+	    '<div class="ats-details">' +
+	      '<div class="ats-row">' +
+	        '<div class="ats-row-label">✅ Matched Keywords</div>' +
+	        '<div class="ats-row-value">' + (matchedChips || '<span style="color:var(--muted)">None found</span>') + '</div>' +
+	      '</div>' +
+	      '<div class="ats-row">' +
+	        '<div class="ats-row-label">❌ Missing Keywords</div>' +
+	        '<div class="ats-row-value">' + (missingChips || '<span style="color:var(--muted)">None</span>') + '</div>' +
+	      '</div>' +
+	    '</div>' +
+	  '</div>' +
+	  (tip ? '<div class="ats-tip">💡 <strong>Tip:</strong> ' + tip + '</div>' : '');
 }
 
 // ══ Auto-open edit modal if editApp is set (from GET /editJob) ══

@@ -1,8 +1,11 @@
 package dao;
 
 import java.util.List;
+
 import dto.JobApplication;
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public class DataAccess {
 

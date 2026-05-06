@@ -27,20 +27,15 @@ public class Jobcontroller {
     DataAccess dao = new DataAccess();
 
     private static final String GROQ_API_KEY = System.getenv("GROQ_API_KEY");
-
-    // ── STEP 2: Resume upload folder (auto-created if not exists) ──
     private static final String UPLOAD_DIR = System.getProperty("user.home") + "/jobtracker_uploads/";
 
-    // GET "/" → Home page
     @GetMapping("/")
     public String home(Model model) {
-        List<JobApplication> applications = dao.getAllJobs();
-        model.addAttribute("applications", applications);
+        model.addAttribute("applications", dao.getAllJobs());
         model.addAttribute("job", new JobApplication());
         return "home.jsp";
     }
 
-    // POST "/addJob" → Save new application + optional resume
     @PostMapping("/addJob")
     public String addJob(
             @RequestParam("company_name")     String company_name,
@@ -67,15 +62,12 @@ public class Jobcontroller {
         return "redirect:/";
     }
 
-    // POST "/deleteJob" → Delete application
     @PostMapping("/deleteJob")
     public String deleteJob(@RequestParam("id") Long id) {
         dao.deleteJob(id);
         return "redirect:/";
     }
-    
 
-    // GET "/editJob" → Pre-fill edit modal
     @GetMapping("/editJob")
     public String editJobForm(@RequestParam("id") Long id, Model model) {
         model.addAttribute("editApp", dao.findById(id));
@@ -84,7 +76,6 @@ public class Jobcontroller {
         return "home.jsp";
     }
 
-    // POST "/updateJob" → Save edits
     @PostMapping("/updateJob")
     public String updateJob(
             @RequestParam("id")               Long id,
@@ -112,7 +103,6 @@ public class Jobcontroller {
         return "redirect:/";
     }
 
-    // POST "/aiInsights" → Groq career advice
     @PostMapping("/aiInsights")
     public String aiInsights(
             @RequestParam("id")           Long id,
@@ -139,10 +129,8 @@ public class Jobcontroller {
         return "home.jsp";
     }
 
-    // POST "/atsScore" → Groq ATS analysis
     @PostMapping("/atsScore")
     public String atsScore(
-            @RequestParam("id")           Long id,
             @RequestParam("company_name") String company_name,
             @RequestParam("job_desc")     String jobDesc,
             @RequestParam("resume_text")  String resumeText,
@@ -165,7 +153,6 @@ public class Jobcontroller {
         return "home.jsp";
     }
 
-    // HELPER: Save resume file to disk
     private String saveResume(MultipartFile file, String companyName) {
         try {
             File dir = new File(UPLOAD_DIR);
@@ -180,9 +167,6 @@ public class Jobcontroller {
         }
     }
 
-    // HELPER: Call Groq API (free, ~200ms response)
-    // Uses llama-3.3-70b-versatile model
-    // OpenAI-compatible endpoint
     private String callGroqAPI(String userPrompt) {
         try {
             URL url = new URL("https://api.groq.com/openai/v1/chat/completions");
@@ -222,12 +206,8 @@ public class Jobcontroller {
             while ((line = reader.readLine()) != null) response.append(line);
             reader.close();
 
-            if (code != 200) {
-                return "Groq API Error " + code + ": " + response.toString();
-            }
+            if (code != 200) return "Groq API Error " + code + ": " + response.toString();
 
-            // Parse "content" field from OpenAI-compatible JSON
-            // {"choices":[{"message":{"content":"TEXT HERE"}}]}
             String raw = response.toString();
             int start = raw.indexOf("\"content\":\"");
             if (start == -1) return "Could not parse Groq response.";

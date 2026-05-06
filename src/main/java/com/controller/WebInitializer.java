@@ -1,5 +1,6 @@
 package com.controller;
 
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.configuration.Myconfig;
@@ -38,4 +39,6 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
             )
         );
     }
+    
+   
 }
