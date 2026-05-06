@@ -26,4 +26,4 @@ public class Myconfig {
     public MultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }
-}
+}// if we search based on my resume company should be visible, resume should be parsed and open the open link.
