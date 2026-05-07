@@ -286,6 +286,11 @@ footer{text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
   <div class="logo"><span class="logo-dot"></span>JobTrack Pro</div>
   <div class="header-right">
     <span class="header-tag">Career Command Center</span>
+    <a href="logout" style="font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;
+   letter-spacing:.05em;text-transform:uppercase;color:var(--paper);
+   border:1px solid #444;padding:5px 14px;border-radius:20px;text-decoration:none;">
+  Sign Out
+</a>
   </div>
 </header>
 
