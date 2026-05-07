@@ -8,408 +8,515 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════════
-   DESIGN TOKENS  (same as home.jsp)
-══════════════════════════════════════════ */
 :root {
   --ink:      #0d0d0d;
   --paper:    #f5f0e8;
   --cream:    #ede8dc;
   --accent:   #e8401c;
-  --blue:     #2563eb;
   --gold:     #c9a84c;
   --muted:    #8a8070;
   --white:    #ffffff;
   --border:   #d8d0c0;
-  --success:  #16a34a;
   --danger:   #dc2626;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--paper);
-  color:var(--ink);
-  min-height:100vh;
-  overflow-x:hidden;
-  display:flex;
-  flex-direction:column;
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
 }
 
-/* noise overlay */
-body::before{content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:0;opacity:.5;}
-
-/* ══ HEADER ══ */
-header{
-  position:relative;z-index:100;
-  background:var(--ink);color:var(--paper);
-  padding:0 48px;display:flex;align-items:center;justify-content:space-between;
-  height:68px;border-bottom:3px solid var(--accent);
-}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;
-  letter-spacing:-.03em;display:flex;align-items:center;gap:10px;}
-.logo-dot{width:9px;height:9px;background:var(--accent);border-radius:50%;
-  animation:pulse 2s ease-in-out infinite;}
-@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.5);opacity:.6;}}
-.header-tag{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
-  color:#555;border:1px solid #333;padding:4px 12px;border-radius:20px;}
-
-/* ══ HERO STRIP ══ */
-.hero-strip{
-  position:relative;
-  background:var(--ink);color:var(--paper);
-  padding:40px 48px 36px;overflow:hidden;
-}
-.hero-strip::after{content:'';position:absolute;right:-60px;top:-60px;
-  width:320px;height:320px;border:60px solid var(--accent);border-radius:50%;opacity:.07;}
-.hero-strip::before{content:'';position:absolute;right:180px;bottom:-50px;
-  width:160px;height:160px;border:30px solid var(--gold);border-radius:50%;opacity:.10;}
-.hero-eyebrow{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;
-  color:var(--accent);font-weight:500;margin-bottom:10px;}
-.hero-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3.5vw,2.8rem);
-  font-weight:800;line-height:1.05;letter-spacing:-.04em;}
-.hero-title span{color:var(--accent);}
-
-/* ══ LOGIN LAYOUT ══ */
-.login-wrapper{
-  position:relative;z-index:1;
-  flex:1;display:flex;align-items:center;justify-content:center;
-  padding:48px 24px;
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: .5;
 }
 
-.login-card{
-  background:var(--white);
-  border:1.5px solid var(--border);
-  border-radius:16px;
-  overflow:hidden;
-  width:100%;max-width:460px;
-  box-shadow:0 4px 40px rgba(0,0,0,.08);
-  animation:slideUp .4s ease both;
+/* ── HEADER ── */
+header {
+  position: relative;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  border-bottom: 3px solid var(--accent);
 }
-@keyframes slideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-
-.login-card-header{
-  background:var(--ink);color:var(--paper);
-  padding:20px 28px;
-  display:flex;align-items:center;justify-content:space-between;
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -.03em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.login-card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;}
-.login-card-badge{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-  background:var(--accent);color:white;padding:4px 10px;border-radius:20px;}
+.logo-dot {
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.5); opacity: .6; }
+}
+.header-tag {
+  font-size: .7rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #555;
+  border: 1px solid #333;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
 
-.login-body{padding:32px 28px;display:flex;flex-direction:column;gap:20px;}
+/* ── SPLIT LAYOUT ── */
+.page {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 480px;
+}
 
-.form-group{display:flex;flex-direction:column;gap:6px;}
-label{font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+/* ── LEFT PANEL ── */
+.left-panel {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 64px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.left-panel::after {
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 400px;
+  height: 400px;
+  border: 72px solid var(--accent);
+  border-radius: 50%;
+  opacity: .06;
+}
+.left-panel::before {
+  content: '';
+  position: absolute;
+  left: -40px;
+  bottom: -60px;
+  width: 220px;
+  height: 220px;
+  border: 40px solid var(--gold);
+  border-radius: 50%;
+  opacity: .08;
+}
+.eyebrow {
+  font-size: .68rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+.left-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.2rem, 3.6vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -.04em;
+  margin-bottom: 20px;
+}
+.left-title span { color: var(--accent); }
+.left-sub {
+  font-size: .93rem;
+  color: #777;
+  font-weight: 300;
+  max-width: 340px;
+  line-height: 1.75;
+}
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 52px;
+}
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 20px 0;
+  border-bottom: 1px solid #1c1c1c;
+}
+.feature:first-child { padding-top: 0; }
+.feature:last-child  { border-bottom: none; padding-bottom: 0; }
+.feature-num {
+  font-family: 'Syne', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: .1em;
+  padding-top: 3px;
+  flex-shrink: 0;
+  width: 24px;
+}
+.feature-title {
+  font-family: 'Syne', sans-serif;
+  font-size: .88rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--paper);
+}
+.feature-desc {
+  font-size: .78rem;
+  color: #666;
+  line-height: 1.65;
+}
+.left-bottom {
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #2e2e2e;
+  margin-top: 48px;
+}
 
-.input-wrapper{position:relative;}
+/* ── RIGHT PANEL ── */
+.right-panel {
+  background: var(--paper);
+  padding: 64px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1.5px solid var(--border);
+}
+.form-eyebrow {
+  font-size: .65rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.form-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  margin-bottom: 6px;
+}
+.form-subtitle {
+  font-size: .87rem;
+  color: var(--muted);
+  font-weight: 300;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+/* ── INPUTS ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+label {
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.input-wrap { position: relative; }
+
 input[type="text"],
-input[type="password"],
-input[type="email"]{
-  font-family:'DM Sans',sans-serif;font-size:.92rem;
-  padding:11px 13px 11px 40px;
-  border:1.5px solid var(--border);border-radius:8px;
-  background:var(--paper);color:var(--ink);
-  transition:border-color .2s,box-shadow .2s;outline:none;width:100%;
+input[type="password"] {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .92rem;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
 }
-input:focus{
-  border-color:var(--accent);background:var(--white);
-  box-shadow:0 0 0 3px rgba(232,64,28,.08);
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232,64,28,.08);
 }
-.input-icon{
-  position:absolute;left:13px;top:50%;transform:translateY(-50%);
-  font-size:.95rem;pointer-events:none;color:var(--muted);
+input::placeholder { color: #c4bdb4; }
+
+.pw-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: .72rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: color .15s;
+}
+.pw-toggle:hover { color: var(--ink); }
+
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  margin-top: -4px;
+}
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .8rem;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.forgot {
+  font-size: .78rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.forgot:hover { text-decoration: underline; }
+
+/* ── BUTTON ── */
+.btn-signin {
+  width: 100%;
+  font-family: 'Syne', sans-serif;
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  transition: background .15s, transform .15s, box-shadow .15s;
+  margin-bottom: 28px;
+}
+.btn-signin:hover {
+  background: #c93518;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(232,64,28,.26);
+}
+.btn-signin:active { transform: translateY(0); }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.divider-line  { flex: 1; height: 1px; background: var(--border); }
+.divider-text  {
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
 }
 
-/* password toggle */
-.toggle-pw{
-  position:absolute;right:12px;top:50%;transform:translateY(-50%);
-  background:none;border:none;cursor:pointer;color:var(--muted);font-size:.9rem;
-  transition:color .15s;
+.signup-line {
+  text-align: center;
+  font-size: .82rem;
+  color: var(--muted);
 }
-.toggle-pw:hover{color:var(--ink);}
-
-.remember-row{
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:.82rem;
+.signup-line a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--accent);
+  padding-bottom: 1px;
+  transition: color .15s;
 }
-.remember-label{display:flex;align-items:center;gap:7px;cursor:pointer;color:var(--muted);}
-input[type="checkbox"]{
-  width:15px;height:15px;accent-color:var(--accent);cursor:pointer;
-  padding:0;border:none;background:none;
-}
-.forgot-link{font-size:.78rem;color:var(--accent);text-decoration:none;font-weight:500;}
-.forgot-link:hover{text-decoration:underline;}
+.signup-line a:hover { color: var(--accent); }
 
-.btn-login{
-  font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;
-  letter-spacing:.05em;text-transform:uppercase;
-  background:var(--accent);color:white;
-  border:none;border-radius:8px;padding:14px 28px;
-  cursor:pointer;width:100%;
-  transition:transform .15s,box-shadow .15s,background .15s;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-login:hover{background:#c93518;transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,64,28,.28);}
-.btn-login:active{transform:translateY(0);}
-
-.divider{display:flex;align-items:center;gap:12px;}
-.divider-line{flex:1;height:1px;background:var(--border);}
-.divider-text{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-
-/* error alert */
-.alert-error{
-  background:#fee2e2;border:1.5px solid #fca5a5;
-  border-radius:8px;padding:10px 14px;
-  font-size:.84rem;color:var(--danger);
-  display:flex;align-items:center;gap:8px;
+/* ── ERROR ── */
+.alert-error {
+  background: #fff5f5;
+  border: 1.5px solid #fca5a5;
+  border-left: 4px solid var(--danger);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: .83rem;
+  color: var(--danger);
+  margin-bottom: 24px;
+  line-height: 1.5;
 }
 
-/* signup prompt */
-.signup-prompt{
-  text-align:center;font-size:.82rem;color:var(--muted);
-  padding-top:4px;
-}
-.signup-prompt a{color:var(--accent);font-weight:500;text-decoration:none;}
-.signup-prompt a:hover{text-decoration:underline;}
-
-/* ══ SPLIT PANEL (decorative left side on wide screens) ══ */
-.login-split{
-  position:relative;z-index:1;
-  flex:1;display:flex;align-items:stretch;justify-content:center;
-  padding:48px 24px;
-}
-.split-inner{
-  display:flex;gap:40px;align-items:center;
-  width:100%;max-width:960px;
-}
-.split-left{
-  flex:1;display:flex;flex-direction:column;justify-content:center;gap:28px;
-  padding-right:40px;
-}
-.split-right{flex:0 0 460px;}
-
-.feature-item{display:flex;align-items:flex-start;gap:14px;}
-.feature-icon{
-  width:40px;height:40px;flex-shrink:0;
-  border-radius:10px;background:var(--ink);
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
-}
-.feature-text-title{
-  font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;
-  margin-bottom:3px;
-}
-.feature-text-sub{font-size:.82rem;color:var(--muted);line-height:1.5;}
-
-.section-label{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
-.section-label-line{flex:1;height:1px;background:var(--border);}
-.section-label-text{font-family:'Syne',sans-serif;font-size:.62rem;
-  letter-spacing:.25em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
-
-/* ══ FOOTER ══ */
-footer{
-  text-align:center;padding:22px;font-size:.72rem;color:var(--muted);
-  border-top:1px solid var(--border);letter-spacing:.05em;
-  position:relative;z-index:1;
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 18px;
+  font-size: .7rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  letter-spacing: .06em;
 }
 
-/* ══ RESPONSIVE ══ */
-@media(max-width:768px){
-  header{padding:0 20px;}
-  .hero-strip{padding:30px 20px 26px;}
-  .split-left{display:none;}
-  .login-split{padding:32px 16px;}
-  .split-inner{flex-direction:column;}
-  .split-right{flex:unset;width:100%;}
-}
-@media(min-width:769px){
-  .login-wrapper{display:none;}
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .page { grid-template-columns: 1fr; }
+  .left-panel { display: none; }
+  header { padding: 0 20px; }
+  .right-panel {
+    padding: 48px 28px;
+    border-left: none;
+    min-height: calc(100vh - 68px - 52px);
+  }
 }
 </style>
 </head>
 <body>
 
-<!-- ══ HEADER ══ -->
 <header>
-  <div class="logo"><span class="logo-dot"></span>JobTrack Pro</div>
-  <div>
-    <span class="header-tag">Career Command Center</span>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    JobTrack Pro
   </div>
+  <span class="header-tag">Career Command Center</span>
 </header>
 
-<!-- ══ HERO STRIP ══ -->
-<div class="hero-strip">
-  <div class="hero-eyebrow">▸ AI-Powered Job Hunt Tracker</div>
-  <h1 class="hero-title">Welcome Back.<br><span>Keep Hunting.</span></h1>
-</div>
+<div class="page">
 
-<!-- ══ DESKTOP: SPLIT LAYOUT ══ -->
-<div class="login-split">
-  <div class="split-inner">
+  <!-- LEFT: brand + features -->
+  <div class="left-panel">
+    <div>
+      <div class="eyebrow">&#9656; AI-Powered Job Hunt Tracker</div>
+      <h1 class="left-title">Track Every<br>Opportunity,<br><span>Land the Job.</span></h1>
+      <p class="left-sub">Log applications, score your resume against job descriptions, and get AI-powered coaching — all in one place.</p>
 
-    <!-- Left: feature bullets -->
-    <div class="split-left">
-      <div class="section-label">
-        <span class="section-label-text">What's Inside</span>
-        <div class="section-label-line"></div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon">📋</div>
-        <div>
-          <div class="feature-text-title">Track Every Application</div>
-          <div class="feature-text-sub">Log companies, roles, dates, and statuses in one clean dashboard.</div>
+      <div class="features">
+        <div class="feature">
+          <span class="feature-num">01</span>
+          <div>
+            <div class="feature-title">Application Dashboard</div>
+            <div class="feature-desc">Log companies, roles, dates and statuses. Filter and search across everything instantly.</div>
+          </div>
         </div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon">🤖</div>
-        <div>
-          <div class="feature-text-title">AI Career Insights</div>
-          <div class="feature-text-sub">Get Groq-powered coaching, interview tips, and skill highlights for each role.</div>
+        <div class="feature">
+          <span class="feature-num">02</span>
+          <div>
+            <div class="feature-title">AI Career Insights</div>
+            <div class="feature-desc">Groq-powered coaching with interview tips and key skills to highlight for each role.</div>
+          </div>
         </div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon">🎯</div>
-        <div>
-          <div class="feature-text-title">ATS Keyword Scorer</div>
-          <div class="feature-text-sub">Compare your resume against job descriptions and close the keyword gap.</div>
-        </div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon">📄</div>
-        <div>
-          <div class="feature-text-title">Resume Upload & Viewer</div>
-          <div class="feature-text-sub">Attach a PDF or DOCX to each application and access it any time.</div>
+        <div class="feature">
+          <span class="feature-num">03</span>
+          <div>
+            <div class="feature-title">ATS Keyword Scorer</div>
+            <div class="feature-desc">Compare your resume against the job description. Close the keyword gap before you apply.</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Right: login card -->
-    <div class="split-right">
-      <%-- Show error message if login failed --%>
-      <%
-        String error = (String) request.getAttribute("loginError");
-      %>
-      <div class="login-card">
-        <div class="login-card-header">
-          <span class="login-card-title">Sign In to JobTrack Pro</span>
-          <span class="login-card-badge">Secure</span>
-        </div>
-        <form action="login" method="post" class="login-body">
-
-          <% if (error != null) { %>
-          <div class="alert-error">⚠ <%= error %></div>
-          <% } %>
-
-          <div class="form-group">
-            <label>Username</label>
-            <div class="input-wrapper">
-              <span class="input-icon">👤</span>
-              <input type="text" name="username" placeholder="Enter your username" required autofocus/>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Password</label>
-            <div class="input-wrapper">
-              <span class="input-icon">🔒</span>
-              <input type="password" name="password" id="pwField" placeholder="Enter your password" required/>
-              <button type="button" class="toggle-pw" onclick="togglePw()" id="pwToggle" title="Show/hide password">👁</button>
-            </div>
-          </div>
-
-          <div class="remember-row">
-            <label class="remember-label">
-              <input type="checkbox" name="remember"/> Remember me
-            </label>
-            <a href="forgotPassword" class="forgot-link">Forgot password?</a>
-          </div>
-
-          <button type="submit" class="btn-login">
-            Sign In &nbsp;→
-          </button>
-
-          <div class="divider">
-            <div class="divider-line"></div>
-            <span class="divider-text">New here?</span>
-            <div class="divider-line"></div>
-          </div>
-
-          <div class="signup-prompt">
-            Don't have an account? <a href="register">Create one free</a>
-          </div>
-
-        </form>
-      </div>
-    </div><!-- end split-right -->
-
+    <div class="left-bottom">Spring MVC &nbsp;&middot;&nbsp; Hibernate &nbsp;&middot;&nbsp; Groq AI</div>
   </div>
-</div>
 
-<!-- ══ MOBILE: SINGLE CARD LAYOUT ══ -->
-<div class="login-wrapper">
-  <%
-    String errorM = (String) request.getAttribute("loginError");
-  %>
-  <div class="login-card">
-    <div class="login-card-header">
-      <span class="login-card-title">Sign In to JobTrack Pro</span>
-      <span class="login-card-badge">Secure</span>
-    </div>
-    <form action="login" method="post" class="login-body">
+  <!-- RIGHT: login form -->
+  <div class="right-panel">
 
-      <% if (errorM != null) { %>
-      <div class="alert-error">⚠ <%= errorM %></div>
-      <% } %>
+    <div class="form-eyebrow">Welcome back</div>
+    <div class="form-title">Sign in</div>
+    <div class="form-subtitle">Enter your credentials to access your dashboard.</div>
+
+    <%
+      String error = (String) request.getAttribute("loginError");
+    %>
+    <% if (error != null) { %>
+    <div class="alert-error"><%= error %></div>
+    <% } %>
+
+    <form action="login" method="post">
 
       <div class="form-group">
-        <label>Username</label>
-        <div class="input-wrapper">
-          <span class="input-icon">👤</span>
-          <input type="text" name="username" placeholder="Enter your username" required/>
-        </div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username"
+               placeholder="e.g. john_doe" required autofocus/>
       </div>
 
       <div class="form-group">
-        <label>Password</label>
-        <div class="input-wrapper">
-          <span class="input-icon">🔒</span>
-          <input type="password" name="password" id="pwFieldM" placeholder="Enter your password" required/>
-          <button type="button" class="toggle-pw" onclick="togglePwM()" title="Show/hide password">👁</button>
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="password" name="password"
+                 placeholder="Your password" required/>
+          <button type="button" class="pw-toggle" onclick="togglePassword(this)">Show</button>
         </div>
       </div>
 
-      <div class="remember-row">
-        <label class="remember-label">
+      <div class="bottom-row">
+        <label class="remember">
           <input type="checkbox" name="remember"/> Remember me
         </label>
-        <a href="forgotPassword" class="forgot-link">Forgot?</a>
+        <a class="forgot" href="forgotPassword">Forgot password?</a>
       </div>
 
-      <button type="submit" class="btn-login">Sign In &nbsp;→</button>
+      <button type="submit" class="btn-signin">Sign In</button>
 
-      <div class="signup-prompt">
-        No account? <a href="register">Create one free</a>
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">New here?</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="signup-line">
+        Don't have an account? <a href="register">Create one free</a>
       </div>
 
     </form>
   </div>
+
 </div>
 
-<!-- ══ FOOTER ══ -->
-<footer>JobTrack Pro &nbsp;·&nbsp; Spring MVC + Hibernate + Groq AI &nbsp;·&nbsp; Built for job seekers</footer>
+<footer>JobTrack Pro &nbsp;&middot;&nbsp; Spring MVC + Hibernate + Groq AI &nbsp;&middot;&nbsp; Built for job seekers</footer>
 
 <script>
-function togglePw() {
-  const f = document.getElementById('pwField');
-  const b = document.getElementById('pwToggle');
-  if (f.type === 'password') { f.type = 'text';  b.textContent = '🙈'; }
-  else                       { f.type = 'password'; b.textContent = '👁'; }
-}
-function togglePwM() {
-  const f = document.getElementById('pwFieldM');
-  if (f.type === 'password') f.type = 'text';
-  else f.type = 'password';
+function togglePassword(btn) {
+  var field = document.getElementById('password');
+  if (field.type === 'password') {
+    field.type = 'text';
+    btn.textContent = 'Hide';
+  } else {
+    field.type = 'password';
+    btn.textContent = 'Show';
+  }
 }
 </script>
 </body>
