@@ -1,6 +1,6 @@
 # JobTrack
 
-JobTrack is a Java-based web application designed to manage and track job applications efficiently. It provides a simple interface to add, view, and delete job entries, with persistent storage using MySQL.
+JobTrack is a Java-based web application designed to manage and track job applications efficiently. It provides a simple interface to add, view, and delete job entries, with persistent storage using MySQL. The application now includes secure user authentication with login and signup functionality.
 
 ## Tech Stack
 
@@ -13,6 +13,7 @@ JobTrack is a Java-based web application designed to manage and track job applic
 
 ## Features
 
+- **User Authentication**: Secure login and signup functionality for user account management
 - Add job applications with details such as company name, role, date, status, description, and application type  
 - View all job applications in a structured format  
 - Delete job applications  
@@ -42,6 +43,16 @@ The application follows the MVC (Model-View-Controller) pattern:
 - Controller: Handles requests and coordinates between view and data layer  
 
 Hibernate is used to map Java objects to database tables and perform CRUD operations.
+
+## Authentication System
+
+The login-signup feature provides:
+
+- **User Registration**: New users can create an account with email and password
+- **Secure Login**: Existing users can log in with their credentials
+- **Session Management**: User sessions are managed securely to maintain authentication state
+- **Password Security**: Passwords are securely stored and validated
+- **User Dashboard**: After login, users can access their personalized job tracking dashboard
 
 ## Getting Started
 
@@ -81,6 +92,7 @@ mvn clean install
 - Building dynamic web pages using JSP  
 - Applying DAO pattern for clean architecture  
 - Integrating Java applications with MySQL  
+- Implementing user authentication and session management
 
 ## Future Improvements
 
@@ -88,7 +100,9 @@ mvn clean install
 - Improve UI styling  
 - Introduce a service layer  
 - Migrate to Spring Boot with REST APIs  
-- Add authentication and user management  
+- Add email verification for signup  
+- Implement password reset functionality  
+- Add role-based access control (RBAC)
 
 ## License
 
