@@ -128,6 +128,72 @@ Hibernate is used to map Java objects to database tables and perform CRUD operat
 - Migrate to Spring Boot with REST APIs
 - Improve UI styling with a modern frontend framework
 
+  # JobTrack
+
+JobTrack is a Java-based web application designed to manage and track job applications efficiently. It provides a simple interface to add, view, update, and delete job entries, with persistent storage using MySQL — now enhanced with secure user authentication, resume upload support, and AI-powered insights.
+
+## Tech Stack
+
+![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=java&logoColor=white)
+![Spring MVC](https://img.shields.io/badge/Spring%20MVC-6DB33F?style=flat&logo=spring&logoColor=white)
+![Spring Security](https://shields.io)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=flat&logo=hibernate&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+![JSP](https://img.shields.io/badge/JSP-323330?style=flat)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=flat&logo=apachemaven&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)
+
+## Features
+
+### 🔐 User Authentication
+- **Secure Login & Signup** – Personal accounts for users to manage their own job data.
+- **Session Management** – Keeps users logged in securely during their job search session.
+- **Password Encryption** – Ensures user credentials are stored safely in the database.
+
+### 📝 Core Job Tracking
+- Add job applications with details such as company name, role, status, and description.
+- View, edit, and delete job entries in a structured dashboard.
+- Persistent storage using MySQL.
+
+### 📄 Resume Management & AI Analysis
+- **Resume Upload** – Attach PDF or DOCX resumes to specific job applications.
+- **AI Resume Analyzer** – Get instant, AI-generated feedback on your resume tailored to the specific job description.
+- **Job Match Score** – See how well your skills align with the role using OpenAI-powered analysis.
+
+### AI Insights *(Planned)*
+- **Interview Prep Tips** – Likely interview questions based on the role and company.
+- **Cover Letter Generator** – Auto-generate a tailored cover letter draft based on your profile.
+
+## Project Structure
+
+- `dto` – Entity classes (User, Job, Resume)
+- `dao` – Data access logic using Hibernate
+- `service` – Business logic for AI analysis, File I/O, and Auth processing
+- `controller` – Request handling for Login, Signup, and Job CRUD
+- `security` – Configuration for Spring Security and authentication filters
+- `webapp` – JSP files for the UI (Login, Dashboard, Profile)
+- `uploads/` – Secure directory for storing uploaded resumes
+
+## Getting Started
+
+### Prerequisites
+- Java (JDK 8 or above)
+- Maven & MySQL
+- Apache Tomcat
+- OpenAI API key
+
+### Setup
+1. **Clone the repo:** `git clone https://github.com/Prashanthcoder/job-tracker-app/`
+2. **Database:** Create a MySQL schema and update `persistence.xml`.
+3. **API Keys:** Add your `openai.api.key` and file upload path to `application.properties`.
+4. **Build & Deploy:** Run `mvn clean install` and deploy the `.war` file to Tomcat.
+
+## Future Improvements
+- Dashboard charts for application status breakdown.
+- Email reminders for interview follow-ups.
+- Migrate to Spring Boot for simplified configuration.
+
+
 ## License
 
 This project is intended for learning and educational purposes.
